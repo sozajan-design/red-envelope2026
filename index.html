@@ -34,7 +34,7 @@
             -webkit-text-fill-color: transparent;
             filter: drop-shadow(0 2px 0px rgba(139, 0, 0, 0.8)) drop-shadow(0 4px 10px rgba(0,0,0,0.5));
             letter-spacing: 0.05em;
-            line-height: 1.1; /* 調整行高讓兩行字更緊湊 */
+            line-height: 1.1; 
         }
 
         .scratch-container {
@@ -141,11 +141,23 @@
             transform: translateY(4px);
             border-bottom-width: 2px;
         }
+
+        .footer-info {
+            position: absolute;
+            bottom: 12px;
+            width: 100%;
+            text-align: center;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
+            font-weight: bold;
+            pointer-events: none;
+            letter-spacing: 0.05em;
+        }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
 
-    <!-- 首頁裝飾 -->
+    <!-- 首頁裝飾燈籠 -->
     <div id="home-decorations" class="fixed inset-0 pointer-events-none overflow-hidden">
         <div class="lantern top-0 left-4"><svg viewBox="0 0 100 120" fill="#ff4d4d"><ellipse cx="50" cy="55" rx="35" ry="45" /><rect x="35" y="10" width="30" height="5" fill="#ffd700"/><rect x="35" y="95" width="30" height="5" fill="#ffd700"/><rect x="48" y="100" width="4" height="20" fill="#ffd700"/></svg></div>
         <div class="lantern top-[-10px] left-24 opacity-60 scale-75"><svg viewBox="0 0 100 120" fill="#ff4d4d"><ellipse cx="50" cy="55" rx="35" ry="45" /><rect x="35" y="10" width="30" height="5" fill="#ffd700"/><rect x="35" y="95" width="30" height="5" fill="#ffd700"/><rect x="48" y="100" width="4" height="20" fill="#ffd700"/></svg></div>
@@ -171,9 +183,9 @@
         <!-- 1. 主選單 -->
         <div id="screen-home" class="text-center relative z-10 py-6">
             <div class="text-8xl mb-6">🧧</div>
-            <!-- 修改標題為兩行：紅包包 / 大挑戰 -->
+            <!-- 修改標題：更正為「紅包」 -->
             <h1 class="text-5xl md:text-6xl font-black mb-8 title-gold" style="font-family: 'Noto Serif TC', serif;">
-                紅包包<br>大挑戰
+                紅包<br>大挑戰
             </h1>
             <p class="text-yellow-100 mb-12 leading-relaxed text-xl font-bold tracking-wide">連續答對六道關卡<br>即可領取新年刮刮樂！</p>
             
@@ -232,7 +244,7 @@
         <div id="screen-consolation-win" class="hidden text-center relative z-10 py-6">
             <div class="text-8xl mb-6">🧧</div>
             <h1 class="text-5xl font-black mb-6 title-gold">新年好禮！</h1>
-            <p class="text-yellow-100 mb-6 font-bold text-xl">請記住暗號領取：</p>
+            <p class="text-yellow-100 mb-6 font-black text-xl">請記住暗號領取：</p>
             
             <div class="bg-black/40 rounded-[2rem] p-8 border-4 border-dashed border-yellow-400 mb-10 relative flex items-center justify-center">
                 <button onclick="copyCode('consolation-code-display', this)" class="copy-btn absolute top-3 right-3" title="複製代碼">
@@ -298,6 +310,11 @@
             <button onclick="goHome()" class="w-full bg-white/10 hover:bg-white/20 text-white font-black py-6 rounded-[2rem] border-2 border-white/30 transition text-xl">
                 重新開始
             </button>
+        </div>
+
+        <!-- 版本與公司資訊 -->
+        <div class="footer-info">
+            v1.2.7 | 日安匕禾Bever System Tech Service
         </div>
     </div>
 
