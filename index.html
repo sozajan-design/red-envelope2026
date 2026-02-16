@@ -157,7 +157,7 @@
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
 
-    <!-- 首頁裝飾燈籠 -->
+    <!-- 裝飾燈籠 -->
     <div id="home-decorations" class="fixed inset-0 pointer-events-none overflow-hidden">
         <div class="lantern top-0 left-4"><svg viewBox="0 0 100 120" fill="#ff4d4d"><ellipse cx="50" cy="55" rx="35" ry="45" /><rect x="35" y="10" width="30" height="5" fill="#ffd700"/><rect x="35" y="95" width="30" height="5" fill="#ffd700"/><rect x="48" y="100" width="4" height="20" fill="#ffd700"/></svg></div>
         <div class="lantern top-[-10px] left-24 opacity-60 scale-75"><svg viewBox="0 0 100 120" fill="#ff4d4d"><ellipse cx="50" cy="55" rx="35" ry="45" /><rect x="35" y="10" width="30" height="5" fill="#ffd700"/><rect x="35" y="95" width="30" height="5" fill="#ffd700"/><rect x="48" y="100" width="4" height="20" fill="#ffd700"/></svg></div>
@@ -183,7 +183,6 @@
         <!-- 1. 主選單 -->
         <div id="screen-home" class="text-center relative z-10 py-6">
             <div class="text-8xl mb-6">🧧</div>
-            <!-- 修改標題：更正為「紅包」 -->
             <h1 class="text-5xl md:text-6xl font-black mb-8 title-gold" style="font-family: 'Noto Serif TC', serif;">
                 紅包<br>大挑戰
             </h1>
@@ -270,7 +269,7 @@
                 <button onclick="verifyPass()" class="w-full btn-gold-3d font-black py-6 rounded-[2rem] text-2xl">
                     驗證並刮開 🧧
                 </button>
-                <p id="error-msg" class="text-yellow-400 font-bold hidden mt-4">⚠ 暗號不正確！請重新挑戰。</p>
+                <p id="error-msg" class="text-yellow-400 font-bold hidden mt-4">⚠ 暗號不正確！請先完成挑戰獲取暗號。</p>
             </div>
         </div>
 
@@ -312,9 +311,8 @@
             </button>
         </div>
 
-        <!-- 版本與公司資訊 -->
         <div class="footer-info">
-            v1.2.7 | 日安匕禾Bever System Tech Service
+            v1.2.8 | 日安匕禾Bever System Tech Service
         </div>
     </div>
 
@@ -392,7 +390,7 @@
             { q: "台南「鹽水」地區以哪一個民俗活動聞名國際？", a: ["鹽水蜂炮", "萬金聖誕", "中台灣元宵", "宜蘭搶孤"], c: 0 },
             { q: "高雄「美濃」地區最著名的傳統精緻工藝是什麼？", a: ["油紙傘", "竹編籃", "陶藝品", "漆器工藝"], c: 0 },
             { q: "哪一個縣市被譽為台灣最重要的「蘭花之鄉」？", a: ["台南市", "屏東縣", "南投縣", "宜蘭縣"], c: 0 },
-            { q: "新竹「內灣」老街過去是因為哪兩大產業而發達？", a: ["礦業與林業", "茶產業", "漁業", "鹽業"], c: 0 },
+            { q: "新竹「內灣」老街過去是因為哪兩大產業而發達？", a: ["礦業與聯業", "茶產業", "漁業", "鹽業"], c: 0 },
             { q: "宜蘭「三星」地區除了青蔥，還有哪種梨子聞名？", a: ["上將梨", "蓮霧梨", "二十世紀梨", "水蜜梨"], c: 0 },
             { q: "屏東「東港」三寶除了鮪魚與櫻花蝦，還有？", a: ["油魚子", "烏魚子", "魚鬆", "黑輪"], c: 0 }
         ];
@@ -407,7 +405,7 @@
         let currentQuiz = [];
         let currentIdx = 0;
         let failCount = 0;
-        let activeCode = ""; 
+        let activeCode = null; // 初始值為 null，確保未挑戰前無法驗證
         let activeAmount = 600; 
 
         function show(id) {
@@ -429,7 +427,8 @@
         }
 
         function startQuiz() {
-            currentIdx = 0; activeAmount = 600; activeCode = generateCode();
+            currentIdx = 0; activeAmount = 600; 
+            activeCode = generateCode(); // 正式生成暗號
             const family = [AUNT_BIRTHDAY_Q, ...POOL_BIRTHDAY.sort(() => Math.random() - 0.5).slice(0, 1)];
             const taiwan = [...POOL_TAIWAN_HARD].sort(() => Math.random() - 0.5).slice(0, 2);
             const english = [...POOL_ENGLISH_HARD].sort(() => Math.random() - 0.5).slice(0, 2);
@@ -477,13 +476,18 @@
 
         function verifyPass() {
             const input = document.getElementById('pass-input').value.trim().toUpperCase();
-            if (input === activeCode) { document.getElementById('error-msg').classList.add('hidden'); initScratch(activeAmount); show('screen-scratch'); } else { document.getElementById('error-msg').classList.remove('hidden'); }
+            // 修復漏洞：必須先有 activeCode 且完全匹配才能通過
+            if (activeCode !== null && input !== "" && input === activeCode) { 
+                document.getElementById('error-msg').classList.add('hidden'); 
+                initScratch(activeAmount); 
+                show('screen-scratch'); 
+            } else { 
+                document.getElementById('error-msg').classList.remove('hidden'); 
+            }
         }
 
         function initScratch(amount) {
             document.getElementById('amount-text').innerText = "$ " + amount;
-            document.getElementById('blessing-text').innerText = amount > 1 ? "恭喜中獎，龍馬精神！" : "雖然是小禮，但也代表滿滿祝福喔！";
-
             const canvas = document.getElementById('scratch-canvas');
             const ctx = canvas.getContext('2d');
             const w = canvas.width; const h = canvas.height;
