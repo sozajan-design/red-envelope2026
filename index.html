@@ -6,7 +6,7 @@
     <title>紅包大挑戰 - 春節旗艦最終版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&family=Noto+Serif+TC:wght@900&display=swap');
         
         :root {
             --chinese-red: #bd081c;
@@ -28,13 +28,13 @@
             position: relative;
         }
 
-        /* 燙金效果標題 */
         .title-gold {
             background: var(--premium-gold);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             filter: drop-shadow(0 2px 0px rgba(139, 0, 0, 0.8)) drop-shadow(0 4px 10px rgba(0,0,0,0.5));
-            letter-spacing: 0.1em;
+            letter-spacing: 0.05em;
+            line-height: 1.1; /* 調整行高讓兩行字更緊湊 */
         }
 
         .scratch-container {
@@ -171,14 +171,17 @@
         <!-- 1. 主選單 -->
         <div id="screen-home" class="text-center relative z-10 py-6">
             <div class="text-8xl mb-6">🧧</div>
-            <h1 class="text-6xl font-black mb-6 title-gold" style="font-family: 'Noto Serif TC', serif;">紅包大挑戰</h1>
+            <!-- 修改標題為兩行：紅包包 / 大挑戰 -->
+            <h1 class="text-5xl md:text-6xl font-black mb-8 title-gold" style="font-family: 'Noto Serif TC', serif;">
+                紅包包<br>大挑戰
+            </h1>
             <p class="text-yellow-100 mb-12 leading-relaxed text-xl font-bold tracking-wide">連續答對六道關卡<br>即可領取新年刮刮樂！</p>
             
             <div class="space-y-6">
                 <button onclick="startQuiz()" class="w-full btn-gold-3d font-black py-6 rounded-[2rem] text-3xl">
                     開始挑戰 🏮
                 </button>
-                <button onclick="show('screen-claim')" class="w-full bg-white/10 border-2 border-yellow-500/50 text-yellow-200 font-bold py-4 rounded-[1.5rem] hover:bg-yellow-500/20 transition text-lg">
+                <button onclick="show('screen-claim')" class="w-full bg-white/10 border-2 border-yellow-500/50 text-yellow-200 font-black py-4 rounded-[1.5rem] hover:bg-yellow-500/20 transition text-lg">
                     輸入暗號領紅包
                 </button>
             </div>
@@ -190,7 +193,7 @@
                 <button onclick="goHome()" class="flex items-center text-yellow-400 font-bold hover:text-white text-base">
                     🏠 首頁
                 </button>
-                <div class="text-lg font-mono font-bold bg-black/40 px-4 py-1.5 rounded-full border-2 border-yellow-500/40">
+                <div class="text-lg font-mono font-black bg-black/40 px-4 py-1.5 rounded-full border-2 border-yellow-500/40">
                     <span id="step-num" class="text-yellow-400">1</span> / 6
                 </div>
             </div>
@@ -292,7 +295,7 @@
                 <button onclick="getConsolation()" class="w-full btn-gold-3d font-black py-5 rounded-2xl text-xl shadow-lg">直接領取 ➔</button>
             </div>
 
-            <button onclick="goHome()" class="w-full bg-white/10 hover:bg-white/20 text-white font-bold py-6 rounded-[2rem] border-2 border-white/30 transition text-xl">
+            <button onclick="goHome()" class="w-full bg-white/10 hover:bg-white/20 text-white font-black py-6 rounded-[2rem] border-2 border-white/30 transition text-xl">
                 重新開始
             </button>
         </div>
@@ -487,25 +490,6 @@
             let isDrawing = false;
             let lastX = 0, lastY = 0;
 
-            // 繪製自定義金幣圖標
-            function drawCoin(x, y) {
-                const tempCanvas = document.createElement('canvas');
-                tempCanvas.width = 40; tempCanvas.height = 40;
-                const tctx = tempCanvas.getContext('2d');
-                
-                tctx.beginPath();
-                tctx.arc(20, 20, 18, 0, Math.PI*2);
-                tctx.fillStyle = '#f6e05e'; tctx.fill();
-                tctx.strokeStyle = '#b8860b'; tctx.lineWidth = 2; tctx.stroke();
-                
-                tctx.fillStyle = '#b8860b'; tctx.font = 'bold 16px serif'; tctx.textAlign = 'center'; tctx.textBaseline = 'middle';
-                tctx.fillText('財', 20, 21);
-                
-                return tempCanvas;
-            }
-
-            const coinImg = drawCoin();
-
             function scratch(x, y, isFirst) {
                 ctx.globalCompositeOperation = 'destination-out';
                 ctx.lineWidth = 14; 
@@ -524,12 +508,7 @@
             };
 
             const startAction = (e) => { isDrawing = true; const p = getPos(e); scratch(p.x, p.y, true); };
-            const moveAction = (e) => { 
-                if(!isDrawing) return; 
-                e.preventDefault(); 
-                const p = getPos(e); 
-                scratch(p.x, p.y, false); 
-            };
+            const moveAction = (e) => { if(!isDrawing) return; e.preventDefault(); const p = getPos(e); scratch(p.x, p.y, false); };
             const endAction = () => { if(isDrawing) { isDrawing = false; launchFinish(); } };
 
             canvas.onmousedown = startAction;
